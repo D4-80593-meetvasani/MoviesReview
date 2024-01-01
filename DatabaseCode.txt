@@ -60,12 +60,31 @@ INSERT INTO Reviews (review, rating, user_id, movie_id)
 VALUES
   ('Avatar is a great movie!', 5, 1, 1),
   ('Titanic is a classic movie.', 4, 2, 2),
-  ('Frozen is a fun and heartwarming movie.', 3, 3, 3),
-  ('The Lord of the Rings: The Fellowship of the Ring is an epic adventure movie. ', 2, 4, 4),
-  ('Skyfall is a great action movie', 1, 5, 5),
-  ('Toy Story is a fun and heartwarming movie.', 5, 6, 6),
-  ('Jurassic Park is a classic sci-fi thriller.', 4, 7, 7),
-  ('Alice in Wonderland is a visually stunning movie.', 3, 8, 8),
-  ('Zootopia is a fun and heartwarming movie.', 2, 9, 9),
-  ('The Dark Knight is a great superhero movie.', 1, 10, 10);
+  ('Frozen is a fun and heartwarming movie.', 3, 2, 3),
+  ('The Lord of the Rings: The Fellowship of the Ring is an epic adventure movie. ', 2, 1, 4),
+  ('Skyfall is a great action movie', 1, 2, 5),
+  ('Toy Story is a fun and heartwarming movie.', 5, 2, 6),
+  ('Jurassic Park is a classic sci-fi thriller.', 4, 2, 7),
+  ('Alice in Wonderland is a visually stunning movie.', 3, 1, 8),
+  ('Zootopia is a fun and heartwarming movie.', 2, 1, 9),
+  ('The Dark Knight is a great superhero movie.', 1, 2, 10);
+
+ALTER TABLE Shares
+  ADD CONSTRAINT fk_shares_user_id
+  FOREIGN KEY (user_id) REFERENCES Users(id)
+  ON DELETE CASCADE;
   
+-- Select data from Users table
+SELECT * FROM Users;
+
+-- Select data from Movies table
+SELECT * FROM Movies;
+
+-- Select data from Reviews table
+SELECT * FROM Reviews;
+
+-- Select data from Shares table
+SELECT * FROM Shares;
+
+
+

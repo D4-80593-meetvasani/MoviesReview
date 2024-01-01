@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class DbUtil {
 	public static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
-	public static final String DB_URL = "jdbc:mysql://localhost:3306/hackathon";
-	public static final String DB_USER = "D4-80593-Meet";
-	public static final String DB_PASSWD = "sunbeam";
+	public static final String DB_URL = "jdbc:mysql://localhost:3306/pune";
+	public static final String DB_USER = "vasani";
+	public static final String DB_PASSWD = "vasani";
 	
 	static {
 		try {
