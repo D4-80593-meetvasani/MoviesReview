@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
@@ -66,7 +67,7 @@ public class Main {
 			return;
 		}
 		User u = new User(0, fname, lname, email, passwd, mobile, birth);
-		try (UserDao dao = new UserDao()) {
+		try (UserDaoImple dao = new UserDaoImple()) {
 			int count = dao.save(u);
 			System.out.println("User registered: " + count);
 		} catch (Exception e) {
@@ -88,10 +89,10 @@ public class Main {
 			return null;
 		}
 
-		try (UserDao dao = new UserDao()) {
-			User u = dao.findByEmail(email);
-			if (u != null && password.equals(u.getPassword())) {
-				return u;
+		try (UserDaoImple dao = new UserDaoImple()) {
+			Optional<User> u = dao.findByEmail(email);
+			if (password.equals(u.orElseThrow( () -> new RuntimeException("User not found ! please enter a valid user")).getPassword())) {
+				return u.get();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -121,7 +122,7 @@ public class Main {
 				return;
 			}
 
-			try (UserDao dao = new UserDao()) {
+			try (UserDaoImple dao = new UserDaoImple()) {
 				int count = dao.update(curUser.getId(), newFName, newLName, newEmail);
 				System.out.println("Profile edited ! rows affected :" + count);
 				return;
@@ -200,7 +201,7 @@ public class Main {
 
 	public static void displayMyReviews(User curUser) {
 		// TODO Auto-generated method stub
-		try (ReviewDao dao = new ReviewDao()) {
+		try (ReviewDaoImple dao = new ReviewDaoImple()) {
 			List<Review> list = dao.findReviewsById(curUser.getId());
 			System.out.println("My Reviews : ");
 			list.forEach(System.out::println);
@@ -210,7 +211,7 @@ public class Main {
 	}
 
 	public static void displayShared(User curUser) {
-		try (ReviewDao dao = new ReviewDao()) {
+		try (ReviewDaoImple dao = new ReviewDaoImple()) {
 			List<Review> list = dao.findSharedReviews(curUser.getId());
 			System.out.println("Shared Reviews : ");
 			if (!list.isEmpty()) {
@@ -243,7 +244,7 @@ public class Main {
 			}
 			sc.nextLine();
 
-			try (UserDao dao = new UserDao()) {
+			try (UserDaoImple dao = new UserDaoImple()) {
 				curUser.setPassword(newPasswd);
 				int count = dao.updatePassword(curUser.getEmail(), newPasswd);
 				System.out.println("Password Updated Succesfully !  Rows Affected : " + count);
@@ -261,7 +262,7 @@ public class Main {
 
 	public static void displayAllMovies() {
 		// TODO Auto-generated method stub
-		try (MovieDao dao = new MovieDao()) {
+		try (MovieDaoImple dao = new MovieDaoImple()) {
 			List<Movies> list = dao.findAll();
 			list.forEach(e -> System.out.println(e));
 		} catch (Exception e) {
@@ -271,7 +272,7 @@ public class Main {
 
 	public static void displayAllUsers() {
 		// TODO Auto-generated method stub
-		try (UserDao dao = new UserDao()) {
+		try (UserDaoImple dao = new UserDaoImple()) {
 			List<User> list = dao.findAll();
 			list.forEach(e -> System.out.println(e));
 		} catch (Exception e) {
@@ -281,7 +282,7 @@ public class Main {
 
 	public static void displayAllReviews() {
 		// TODO Auto-generated method stub
-		try (ReviewDao dao = new ReviewDao()) {
+		try (ReviewDaoImple dao = new ReviewDaoImple()) {
 			List<Review> list = dao.findAll();
 			list.forEach(e -> System.out.println(e));
 		} catch (Exception e) {
@@ -322,7 +323,7 @@ public class Main {
 
 		Review r = new Review(0, id, review, rating, curUser.getId(), timestamp);
 
-		try (ReviewDao dao = new ReviewDao()) {
+		try (ReviewDaoImple dao = new ReviewDaoImple()) {
 			int count = dao.save(r);
 			System.out.println("New review added: " + count);
 		} catch (Exception e) {
@@ -333,7 +334,7 @@ public class Main {
 	}
 
 	private static boolean isValidMovieId(int movieId) {
-		try (MovieDao dao = new MovieDao()) {
+		try (MovieDaoImple dao = new MovieDaoImple()) {
 			List<Movies> movies = dao.findAll();
 			for (Movies movie : movies) {
 				if (movie.getId() == movieId) {
@@ -347,7 +348,7 @@ public class Main {
 	}
 
 	private static boolean isValidReviewId(int userId, int movieId) {
-		try (ReviewDao dao = new ReviewDao()) {
+		try (ReviewDaoImple dao = new ReviewDaoImple()) {
 			List<Review> reviews = dao.findAll();
 			for (Review review : reviews) {
 				if (review.getMovieId() == movieId && userId == review.getUserId()) {
@@ -372,7 +373,7 @@ public class Main {
 			return;
 		}
 
-		Review curReview = getReviewById(rid);
+		Optional<Review> curReview = getReviewById(rid);
 
 		if (curReview == null) {
 			System.out.println("Invalid review ID.");
@@ -398,8 +399,8 @@ public class Main {
 			}
 		} while (userId != 0);
 
-		try (ReviewDao dao = new ReviewDao()) {
-			int count = dao.shareReview(curReview.getId(), sharedUserIds);
+		try (ReviewDaoImple dao = new ReviewDaoImple()) {
+			int count = dao.shareReview(curReview.get().getId(), sharedUserIds);
 			System.out.println("Reviews shared with " + count + " users !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -419,7 +420,7 @@ public class Main {
 			return;
 		}
 
-		Review curReview = getReviewById(rid);
+		Optional<Review> curReview = getReviewById(rid);
 
 		if (curReview == null) {
 			System.out.println("Invalid review ID.");
@@ -443,9 +444,9 @@ public class Main {
 
 		Timestamp timestamp = new Timestamp(new Date().getTime());
 
-		Review newReview = new Review(rid, curReview.getMovieId(), reviewText, rating, curUser.getId(), timestamp);
+		Review newReview = new Review(rid, curReview.get().getMovieId(), reviewText, rating, curUser.getId(), timestamp);
 
-		try (ReviewDao dao = new ReviewDao()) {
+		try (ReviewDaoImple dao = new ReviewDaoImple()) {
 			int count = dao.update(newReview);
 			System.out.println("New review added: " + count);
 		} catch (Exception e) {
@@ -455,17 +456,17 @@ public class Main {
 	}
 
 	private static boolean isReviewBelongsToUser(int reviewId, int userId) {
-		try (ReviewDao dao = new ReviewDao()) {
-			Review review = dao.findReviewById(reviewId);
-			return review != null && review.getUserId() == userId;
+		try (ReviewDaoImple dao = new ReviewDaoImple()) {
+			Optional<Review> review = dao.findReviewById(reviewId);
+			return review != null && review.orElseThrow(()-> new RuntimeException("review not found !! enter valid ")).getUserId() == userId;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
 
-	public static Review getReviewById(int reviewId) {
-		try (ReviewDao dao = new ReviewDao()) {
+	public static Optional<Review> getReviewById(int reviewId) {
+		try (ReviewDaoImple dao = new ReviewDaoImple()) {
 			return dao.findReviewById(reviewId);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -482,7 +483,7 @@ public class Main {
 			return;
 		}
 
-		try (ReviewDao dao = new ReviewDao()) {
+		try (ReviewDaoImple dao = new ReviewDaoImple()) {
 			int count = dao.delete(rid);
 			System.out.println("Review deleted :" + count);
 		} catch (Exception e) {
