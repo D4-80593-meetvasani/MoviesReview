@@ -1,7 +1,9 @@
-package com.sunbeam;
+package com.sunbeam.daos;
 
 import java.util.List;
 import java.util.Optional;
+
+import com.sunbeam.pojos.User;
 
 public interface UserDao extends AutoCloseable {
 	

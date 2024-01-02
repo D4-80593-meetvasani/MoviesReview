@@ -1,6 +1,8 @@
-package com.sunbeam;
+package com.sunbeam.daos;
 
 import java.sql.Connection;
+
+import com.sunbeam.utils.DbUtil;
 
 public class Dao implements AutoCloseable {
 	protected Connection con;

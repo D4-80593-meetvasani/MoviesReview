@@ -1,4 +1,4 @@
-package com.sunbeam;
+package com.sunbeam.daos;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.sunbeam.pojos.User;
 
 public class UserDaoImple extends Dao implements UserDao{
 

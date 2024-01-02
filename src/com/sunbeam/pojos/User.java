@@ -1,4 +1,4 @@
-package com.sunbeam;
+package com.sunbeam.pojos;
 
 public class User {
 	private int id;

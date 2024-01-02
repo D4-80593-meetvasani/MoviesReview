@@ -1,4 +1,4 @@
-package com.sunbeam;
+package com.sunbeam.daos;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.sunbeam.pojos.Review;
 
 public class ReviewDaoImple extends Dao implements ReviewDao{
 
@@ -19,7 +21,7 @@ public class ReviewDaoImple extends Dao implements ReviewDao{
 	private PreparedStatement stmtDisplayShareReview;
 	private PreparedStatement stmtDelete;
 
-	protected ReviewDaoImple() throws Exception {
+	public ReviewDaoImple() throws Exception {
 
 		String sqlFindAll = "SELECT * from Reviews";
 		stmtFindAll = con.prepareStatement(sqlFindAll);

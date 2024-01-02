@@ -1,4 +1,4 @@
-package com.sunbeam;
+package com.sunbeam.pojos;
 
 public class Share {
 	private int review_id;

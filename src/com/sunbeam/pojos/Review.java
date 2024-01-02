@@ -1,4 +1,4 @@
-package com.sunbeam;
+package com.sunbeam.pojos;
 
 import java.sql.Timestamp;
 

@@ -8,6 +8,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import com.sunbeam.daos.MovieDaoImple;
+import com.sunbeam.daos.ReviewDaoImple;
+import com.sunbeam.daos.UserDaoImple;
+import com.sunbeam.pojos.Movies;
+import com.sunbeam.pojos.Review;
+import com.sunbeam.pojos.User;
+
 public class Main {
 
 	public static Scanner sc;
@@ -458,7 +465,7 @@ public class Main {
 	private static boolean isReviewBelongsToUser(int reviewId, int userId) {
 		try (ReviewDaoImple dao = new ReviewDaoImple()) {
 			Optional<Review> review = dao.findReviewById(reviewId);
-			return review != null && review.orElseThrow(()-> new RuntimeException("review not found !! enter valid ")).getUserId() == userId;
+			return review.orElseThrow(()-> new RuntimeException("review not found !! enter valid ")).getUserId() == userId;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

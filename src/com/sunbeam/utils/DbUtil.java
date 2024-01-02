@@ -1,4 +1,4 @@
-package com.sunbeam;
+package com.sunbeam.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
